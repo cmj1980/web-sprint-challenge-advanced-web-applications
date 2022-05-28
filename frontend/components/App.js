@@ -6,6 +6,8 @@ import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 import { axiosWithAuth } from '../axios'
+import { AuthRoute } from './AuthorizedRoute'
+
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -65,9 +67,10 @@ export default function App() {
       setSpinnerOn(false)
     })
     .catch(err => {
-      console.log({err})
-      setMessage('Ouch')
-      redirectToLogin();
+       console.log({err})
+      setMessage('Ouch: jwt malformed')
+      setSpinnerOn(false)
+      navigate('/')
     })
     // ✨ implement
     // We should flush the message state, turn on the spinner
@@ -81,25 +84,25 @@ export default function App() {
 
   const postArticle = article => {
     setMessage('')
-    setSpinnerOn(true);
+    setSpinnerOn(true)
     const newArticle = {
-      title: article.title,
-      text: article.text,
+      title: article.title, 
+      text: article.text, 
       topic: article.topic
     }
-    axiosWithAuth().post('/artyicles', newArticle)
+    axiosWithAuth().post('/articles', newArticle)
     .then(res => {
-      setArticles(articles.concat(res.data.articles))
+      setArticles(articles.concat(res.data.article))
       setMessage(res.data.message)
       setSpinnerOn(false)
     })
     .catch(err => {
-     console.log({err})
-     setMessage('Ouch: jwt malformed')
-     setSpinnerOn(false)
-     redirectToLogin() 
+      console.log({err})
+      setMessage('Ouch: jwt malformed')
+      setSpinnerOn(false)
+      navigate('/');
     })
-    // ✨ implement
+     // ✨ implement
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
@@ -129,7 +132,7 @@ export default function App() {
       console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      redirectToLogin()
+      navigate('/')
     })
      // ✨ implement
     // You got this!
@@ -150,7 +153,7 @@ export default function App() {
       console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      redirectToLogin()
+      navigate('/')
     })
     // ✨ implement
   }
@@ -168,22 +171,23 @@ export default function App() {
           <NavLink id="articlesScreen" to="/articles">Articles</NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm login={login} />} />
+          <Route path="/" element={<LoginForm login={login}/>} />
           <Route path="articles" element={
-            <>
-              <ArticleForm 
+            <AuthRoute>
+              <ArticleForm
               postArticle={postArticle}
               updateArticle={updateArticle}
-              setCurrentArticleId={setCurrentArticleId}
+              setCurrentArticleId={setCurrentArticleId} 
               currentArticle={articles.find(art => art.article_id === currentArticleId)}
               />
-              <Articles 
+              <Articles
               articles={articles} 
-              getArticles={getArticles}
+              getArticles={getArticles} 
               deleteArticle={deleteArticle}
               currentArticleId={currentArticleId}
-              setCurrentArticleId={setCurrentArticleId} />
-            </>
+              setCurrentArticleId={setCurrentArticleId}
+              />
+            </AuthRoute>
           } />
         </Routes>
         <footer>Bloom Institute of Technology 2022</footer>
