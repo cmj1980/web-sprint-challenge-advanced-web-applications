@@ -70,7 +70,7 @@ export default function App() {
        console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      navigate('/')
+      redirectToLogin()
     })
     // ✨ implement
     // We should flush the message state, turn on the spinner
@@ -100,7 +100,7 @@ export default function App() {
       console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      navigate('/');
+      redirectToLogin()
     })
      // ✨ implement
     // The flow is very similar to the `getArticles` function.
@@ -132,7 +132,7 @@ export default function App() {
       console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      navigate('/')
+      redirectToLogin()
     })
      // ✨ implement
     // You got this!
@@ -153,7 +153,7 @@ export default function App() {
       console.log({err})
       setMessage('Ouch: jwt malformed')
       setSpinnerOn(false)
-      navigate('/')
+      redirectToLogin()
     })
     // ✨ implement
   }
